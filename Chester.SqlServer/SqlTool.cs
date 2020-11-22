@@ -23,8 +23,7 @@ namespace Chester.SqlServer
             new SqlConnection(connStr);
 
         /// <summary>
-        /// .NET ODBC defaults ARITHABORT to OFF which can impact query performance. This ensures
-        /// that ARITHABORT is ON.
+        /// This ensures that ARITHABORT is set to ON.
         /// </summary>
         protected override void AugmentConnection()
         {
