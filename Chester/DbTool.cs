@@ -38,27 +38,27 @@ namespace Chester
 
         protected void Dispose(bool disposing)
         {
-            if (!_isDisposed)
-            {
-                if (disposing)
-                {
-                    // dispose the managed resources
-                    if (_cmd != null)
-                    {
-                        _cmd.Dispose();
-                        _cmd = null;
-                    }
+            if (_isDisposed)
+                return;
 
-                    if (_conn != null)
-                    {
-                        CloseConnection();
-                        _conn.Dispose();
-                        _conn = null;
-                    }
+            if (disposing)
+            {
+                // dispose the managed resources
+                if (_cmd != null)
+                {
+                    _cmd.Dispose();
+                    _cmd = null;
                 }
 
-                // dispose the un-managed resources
+                if (_conn != null)
+                {
+                    CloseConnection();
+                    _conn.Dispose();
+                    _conn = null;
+                }
             }
+
+            // dispose the un-managed resources
 
             _isDisposed = true;
         }
@@ -83,7 +83,7 @@ namespace Chester
         public void OpenConnection()
         {
             if (_conn == null)
-                throw new NullReferenceException("conn is null");
+                throw new NullReferenceException($"{nameof(_conn)} is null");
 
             switch (_conn.State)
             {
@@ -102,10 +102,12 @@ namespace Chester
 
         public void CloseConnection()
         {
-            if (_conn != null)
-                while (_conn.State != ConnectionState.Closed)
-                    if (_conn.State == ConnectionState.Open || _conn.State == ConnectionState.Broken)
-                        _conn.Close();
+            if (_conn == null)
+                return;
+
+            while (_conn.State != ConnectionState.Closed)
+                if (_conn.State == ConnectionState.Open || _conn.State == ConnectionState.Broken)
+                    _conn.Close();
         }
         #endregion
 

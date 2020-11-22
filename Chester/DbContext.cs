@@ -334,11 +334,11 @@ namespace Chester
             where T : class, new()
         {
             var t = new T();
-            var cic = CreateOrdinalCache();
+            var oc = CreateOrdinalCache();
 
             Fetch(
                 (IDataReader dr) => {
-                    action(dr, cic, t);
+                    action(dr, oc, t);
                 },
                 cmdBehavior, cmdType, cmdText, @params);
 
@@ -521,10 +521,10 @@ namespace Chester
             using var db = CreateDbTool();
             using var dr = db.DataReader(cmdBehavior, cmdType, cmdText, @params);
 
-            var cic = CreateOrdinalCache();
+            var oc = CreateOrdinalCache();
 
             while (dr.Read())
-                yield return func(dr, cic);
+                yield return func(dr, oc);
 
             dr.Close(); // explicit is always faster
             db.CloseConnection(); // explicit is always faster
@@ -773,8 +773,7 @@ namespace Chester
             string cmdText,
             IEnumerable<IDbDataParameter> @params) =>
             Exec(
-                (IDbTool db) =>
-                {
+                (IDbTool db) => {
                     using var dr = db.DataReader(cmdBehavior, cmdType, cmdText, @params);
                     action(dr);
                     dr.Close(); // explicit is always faster
