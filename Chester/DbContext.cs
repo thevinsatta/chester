@@ -709,7 +709,7 @@ namespace Chester
         }
         #endregion
 
-        #region Execute Data Reader
+        #region Execute DataReader
         /// <summary>
         /// Template for executing a data reader
         /// </summary>
@@ -780,7 +780,7 @@ namespace Chester
                 });
         #endregion
 
-        #region Execute Non-Query
+        #region Execute NonQuery
         /// <summary>
         /// Executes non-query
         /// </summary>
