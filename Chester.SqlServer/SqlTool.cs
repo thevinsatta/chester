@@ -27,8 +27,6 @@ namespace Chester.SqlServer
         /// </summary>
         protected override void AugmentConnection()
         {
-            base.AugmentConnection();
-
             SetCommand(CommandType.Text, "SET ARITHABORT ON;");
             _cmd.ExecuteNonQuery();
         }
