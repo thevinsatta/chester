@@ -83,31 +83,23 @@ namespace Chester
         public void OpenConnection()
         {
             if (_conn == null)
-                throw new NullReferenceException($"{nameof(_conn)} is null");
+                throw new NullReferenceException($"{nameof(_conn)} is null.");
 
-            switch (_conn.State)
-            {
-                case ConnectionState.Closed:
-                    _conn.Open();
-                    AugmentConnection();
-                    break;
+            if (_conn.State == ConnectionState.Broken)
+                _conn.Close();
 
-                case ConnectionState.Broken:
-                    _conn.Close();
-                    _conn.Open();
-                    AugmentConnection();
-                    break;
-            }
+            if (_conn.State == ConnectionState.Closed)
+                _conn.Open();
+
+            AugmentConnection();
         }
 
         public void CloseConnection()
         {
-            if (_conn == null)
+            if (_conn == null || _conn.State == ConnectionState.Closed)
                 return;
 
-            while (_conn.State != ConnectionState.Closed)
-                if (_conn.State == ConnectionState.Open || _conn.State == ConnectionState.Broken)
-                    _conn.Close();
+            _conn.Close();
         }
         #endregion
 
