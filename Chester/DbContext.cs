@@ -984,8 +984,8 @@ namespace Chester
         public IDictionary<string, int> CreateOrdinalCache() =>
             new Dictionary<string, int>();
 
-        public ArgumentException ParamNameNullOrWhiteSpaceException(string paramName) =>
-            new ArgumentException($"{paramName} cannot be null, empty or consists only of white-space characters.");
+        public ArgumentException ArgNullOrWhiteSpaceException(string argName) =>
+            new ArgumentException($"{argName} cannot be null, empty, or consists only of white-space characters.");
 
         public ArgumentException DbTypeNotSupportedException(DbType type, string dbName) =>
             new ArgumentException($"{Enum.GetName(typeof(DbType), type)} is not a supported or ambiguous DbType for {dbName}.");

@@ -58,17 +58,17 @@ namespace Chester.Sqlite
         public override IDbDataParameter DbParam(string name, object value) =>
             !string.IsNullOrWhiteSpace(name)
                 ? new SqliteParameter(name, value)
-                : throw ParamNameNullOrWhiteSpaceException(nameof(name));
+                : throw ArgNullOrWhiteSpaceException(nameof(name));
 
         public override IDbDataParameter DbParam(string name, DbType type) =>
             !string.IsNullOrWhiteSpace(name)
                 ? new SqliteParameter(name, GetDbType(type))
-                : throw ParamNameNullOrWhiteSpaceException(nameof(name));
+                : throw ArgNullOrWhiteSpaceException(nameof(name));
 
         public override IDbDataParameter DbParam(string name, DbType type, int size) =>
             !string.IsNullOrWhiteSpace(name)
                 ? new SqliteParameter(name, GetDbType(type), size)
-                : throw ParamNameNullOrWhiteSpaceException(nameof(name));
+                : throw ArgNullOrWhiteSpaceException(nameof(name));
 
         public override IDbDataParameter DbParam(string name, DbType type, int size, object value,
             ParameterDirection direction) =>
@@ -78,7 +78,7 @@ namespace Chester.Sqlite
                     Direction = direction,
                     Value = value
                 }
-                : throw ParamNameNullOrWhiteSpaceException(nameof(name));
+                : throw ArgNullOrWhiteSpaceException(nameof(name));
         #endregion
 
         #region Helpers

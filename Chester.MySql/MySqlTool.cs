@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using System;
 using System.Data;
 
 namespace Chester.MySql
@@ -12,14 +13,30 @@ namespace Chester.MySql
         #endregion
 
         #region Methods
+        protected override IDbConnection CreateConnection(string connStr)
+        {
+            if (string.IsNullOrWhiteSpace(connStr))
+                throw ArgNullOrWhiteSpaceException(nameof(connStr));
+
+            return new MySqlConnection(connStr);
+        }
+
         protected override IDbCommand CreateCommand(IDbConnection dbConn) =>
-            new MySqlCommand() { Connection = (MySqlConnection)dbConn };
+            new MySqlCommand()
+            {
+                Connection = (MySqlConnection)dbConn ?? throw new ArgumentNullException(nameof(dbConn))
+            };
 
-        protected override IDbCommand CreateCommand(IDbConnection dbConn, string cmdText) =>
-            new MySqlCommand(cmdText, (MySqlConnection)dbConn);
+        protected override IDbCommand CreateCommand(IDbConnection dbConn, string cmdText)
+        {
+            if (dbConn == null)
+                throw new ArgumentNullException(nameof(dbConn));
 
-        protected override IDbConnection CreateConnection(string connStr) =>
-            new MySqlConnection(connStr);
+            if (string.IsNullOrWhiteSpace(cmdText))
+                throw ArgNullOrWhiteSpaceException(nameof(cmdText));
+
+            return new MySqlCommand(cmdText, (MySqlConnection)dbConn);
+        }
         #endregion
     }
 }

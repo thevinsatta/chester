@@ -21,19 +21,14 @@ namespace Chester
             _conn = CreateConnection(connStr);
         }
 
-        /// <summary>
-        /// this will use a current connection "<paramref name="dbConn"/>", 
-        /// used when connecting with a dif user,
-        /// </summary>
-        /// <param name="dbConn">a valid connection</param>
         public DbTool(IDbConnection dbConn)
         {
-            _conn = dbConn;
+            _conn = dbConn ?? throw new ArgumentNullException(nameof(dbConn));
         }
         #endregion
 
         #region Destructor
-        // no unmanaged resources, hence no finalizer here
+        // no unmanaged resources, hence no finalizer
 
         protected void Dispose(bool disposing)
         {
@@ -242,6 +237,11 @@ namespace Chester
             return _cmd.ExecuteScalar();
         }
         #endregion
+        #endregion
+
+        #region Helpers
+        public ArgumentException ArgNullOrWhiteSpaceException(string argName) =>
+            new ArgumentException($"{argName} cannot be null, empty, or consists only of white-space characters.");
         #endregion
     }
 }

@@ -53,17 +53,17 @@ namespace Chester.MySql
         public override IDbDataParameter DbParam(string name, object value) =>
             !string.IsNullOrWhiteSpace(name)
                 ? new MySqlParameter(name, value)
-                : throw ParamNameNullOrWhiteSpaceException(nameof(name));
+                : throw ArgNullOrWhiteSpaceException(nameof(name));
 
         public override IDbDataParameter DbParam(string name, DbType type) =>
             !string.IsNullOrWhiteSpace(name)
                 ? new MySqlParameter(name, GetDbType(type))
-                : throw ParamNameNullOrWhiteSpaceException(nameof(name));
+                : throw ArgNullOrWhiteSpaceException(nameof(name));
 
         public override IDbDataParameter DbParam(string name, DbType type, int size) =>
             !string.IsNullOrWhiteSpace(name)
                 ? new MySqlParameter(name, GetDbType(type), size)
-                : throw ParamNameNullOrWhiteSpaceException(nameof(name));
+                : throw ArgNullOrWhiteSpaceException(nameof(name));
 
         public override IDbDataParameter DbParam(string name, DbType type, int size, object value, ParameterDirection direction) =>
             !string.IsNullOrWhiteSpace(name)
@@ -72,7 +72,7 @@ namespace Chester.MySql
                     Direction = direction,
                     Value = value
                 }
-                : throw ParamNameNullOrWhiteSpaceException(nameof(name));
+                : throw ArgNullOrWhiteSpaceException(nameof(name));
         #endregion
 
         #region Helpers

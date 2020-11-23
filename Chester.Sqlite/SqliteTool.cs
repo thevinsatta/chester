@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using System;
 using System.Data;
 
 namespace Chester.Sqlite
@@ -12,14 +13,30 @@ namespace Chester.Sqlite
         #endregion
 
         #region Methods
+        protected override IDbConnection CreateConnection(string connStr)
+        {
+            if (string.IsNullOrWhiteSpace(connStr))
+                throw ArgNullOrWhiteSpaceException(nameof(connStr));
+
+            return new SqliteConnection(connStr);
+        }
+
         protected override IDbCommand CreateCommand(IDbConnection dbConn) =>
-            new SqliteCommand() { Connection = (SqliteConnection)dbConn };
+            new SqliteCommand()
+            {
+                Connection = (SqliteConnection)dbConn ?? throw new ArgumentNullException(nameof(dbConn))
+            };
 
-        protected override IDbCommand CreateCommand(IDbConnection dbConn, string cmdText) =>
-            new SqliteCommand(cmdText, (SqliteConnection)dbConn);
+        protected override IDbCommand CreateCommand(IDbConnection dbConn, string cmdText)
+        {
+            if (dbConn == null)
+                throw new ArgumentNullException(nameof(dbConn));
 
-        protected override IDbConnection CreateConnection(string connStr) =>
-            new SqliteConnection(connStr);
+            if (string.IsNullOrWhiteSpace(cmdText))
+                throw ArgNullOrWhiteSpaceException(nameof(cmdText));
+
+            return new SqliteCommand(cmdText, (SqliteConnection)dbConn);
+        }
         #endregion
     }
 }
