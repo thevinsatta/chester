@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace Chester
 {
@@ -10,6 +11,9 @@ namespace Chester
         #region Fields
         bool _isDisposed;
 
+        /// <summary>
+        /// in seconds
+        /// </summary>
         protected int _cmdTimeout = 120; // default SQL execution timeout
         protected IDbConnection _conn;
         protected IDbCommand _cmd;
@@ -108,13 +112,11 @@ namespace Chester
             string cmdText)
         {
             if (string.IsNullOrWhiteSpace(cmdText))
-                throw new ArgumentException($"{nameof(cmdText)} is null or empty.");
+                throw ArgNullOrWhiteSpaceException(nameof(cmdText));
 
-            if (_cmd == null)
-                _cmd = CreateCommand(_conn, cmdText);
-            else
-                _cmd.CommandText = cmdText;
-
+            InitCommand();
+            
+            _cmd.CommandText = cmdText;
             _cmd.CommandTimeout = _cmdTimeout;
             _cmd.CommandType = cmdType;
             _cmd.Parameters.Clear();
@@ -127,19 +129,22 @@ namespace Chester
         {
             SetCommand(cmdType, cmdText);
 
-            if (@params != null)
-                foreach (var param in @params)
-                {
-                    if (param.Value == null)
-                        param.Value = DBNull.Value;
+            if (!(@params?.Any() ?? false))
+                return;
 
-                    _cmd.Parameters.Add(param);
-                }
+            foreach (var param in @params)
+            {
+                param.Value ??= DBNull.Value;
+
+                _cmd.Parameters.Add(param);
+            }
         }
 
-        public void SetCommandTimeout(int seconds)
+        public void SetCommandTimeout(int timeout)
         {
-            _cmdTimeout = seconds;
+            _cmdTimeout = timeout >= 0
+                ? timeout
+                : throw new ArgumentOutOfRangeException($"{nameof(timeout)} cannot be less than 0.");
         }
         #endregion
 

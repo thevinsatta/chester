@@ -7,7 +7,7 @@ namespace Chester.Interfaces
     public interface IDbTool : IDisposable
     {
         void CloseConnection();
-        void SetCommandTimeout(int seconds);
+        void SetCommandTimeout(int timeout);
 
         IDbTransaction BeginTransaction();
         IDbTransaction BeginTransaction(IsolationLevel iso);
