@@ -149,10 +149,6 @@ namespace Chester
         #endregion
 
         #region // TRANSACTION ****************************************************
-        /// <summary>
-        /// Begin a transaction
-        /// </summary>
-        /// <returns></returns>
         public IDbTransaction BeginTransaction()
         {
             OpenConnection();
@@ -163,11 +159,6 @@ namespace Chester
             return _cmd.Transaction;
         }
 
-        /// <summary>
-        /// Begin a transaction
-        /// </summary>
-        /// <param name="iso"></param>
-        /// <returns></returns>
         public IDbTransaction BeginTransaction(IsolationLevel iso)
         {
             OpenConnection();
@@ -178,15 +169,9 @@ namespace Chester
             return _cmd.Transaction;
         }
 
-        /// <summary>
-        /// Commit a transaction
-        /// </summary>
         public void CommitTransaction() =>
             _cmd.Transaction?.Commit();
 
-        /// <summary>
-        /// Rollback a transaction
-        /// </summary>
         public void RollbackTransaction() =>
             _cmd.Transaction?.Rollback();
         #endregion
