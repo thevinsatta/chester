@@ -1,5 +1,5 @@
 ﻿using Oracle.ManagedDataAccess.Client;
-using System.Data.Common;
+using System.Data;
 
 namespace Chester.Oracle
 {
@@ -12,13 +12,13 @@ namespace Chester.Oracle
         #endregion
 
         #region Methods
-        protected override DbCommand CreateCommand(DbConnection dbConn) =>
+        protected override IDbCommand CreateCommand(IDbConnection dbConn) =>
             new OracleCommand() { Connection = (OracleConnection)dbConn };
 
-        protected override DbCommand CreateCommand(DbConnection dbConn, string cmdText) =>
+        protected override IDbCommand CreateCommand(IDbConnection dbConn, string cmdText) =>
             new OracleCommand(cmdText, (OracleConnection)dbConn);
 
-        protected override DbConnection CreateConnection(string connStr) =>
+        protected override IDbConnection CreateConnection(string connStr) =>
             new OracleConnection(connStr);
         #endregion
     }

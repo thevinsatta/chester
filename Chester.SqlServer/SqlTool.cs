@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Data.Common;
 
 namespace Chester.SqlServer
 {
@@ -13,13 +12,13 @@ namespace Chester.SqlServer
         #endregion
 
         #region Methods
-        protected override DbCommand CreateCommand(DbConnection dbConn) =>
+        protected override IDbCommand CreateCommand(IDbConnection dbConn) =>
             new SqlCommand() { Connection = (SqlConnection)dbConn };
 
-        protected override DbCommand CreateCommand(DbConnection dbConn, string cmdText) =>
+        protected override IDbCommand CreateCommand(IDbConnection dbConn, string cmdText) =>
             new SqlCommand(cmdText, (SqlConnection)dbConn);
 
-        protected override DbConnection CreateConnection(string connStr) =>
+        protected override IDbConnection CreateConnection(string connStr) =>
             new SqlConnection(connStr);
 
         /// <summary>

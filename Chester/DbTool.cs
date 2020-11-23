@@ -12,8 +12,8 @@ namespace Chester
         bool _isDisposed;
 
         protected int _cmdTimeout = 120; // default SQL execution timeout
-        protected DbConnection _conn;
-        protected DbCommand _cmd;
+        protected IDbConnection _conn;
+        protected IDbCommand _cmd;
         #endregion
 
         #region Constructors
@@ -27,7 +27,7 @@ namespace Chester
         /// used when connecting with a dif user,
         /// </summary>
         /// <param name="dbConn">a valid connection</param>
-        public DbTool(DbConnection dbConn)
+        public DbTool(IDbConnection dbConn)
         {
             _conn = dbConn;
         }
@@ -71,16 +71,16 @@ namespace Chester
         #endregion
 
         #region Methods
-        protected abstract DbConnection CreateConnection(string connStr);
+        protected abstract IDbConnection CreateConnection(string connStr);
 
-        protected abstract DbCommand CreateCommand(DbConnection dbConn);
+        protected abstract IDbCommand CreateCommand(IDbConnection dbConn);
 
-        protected abstract DbCommand CreateCommand(DbConnection dbConn, string cmdText);
+        protected abstract IDbCommand CreateCommand(IDbConnection dbConn, string cmdText);
 
         protected virtual void AugmentConnection() { }
 
         #region // CONNECTION *****************************************************
-        public void OpenConnection()
+        protected void OpenConnection()
         {
             if (_conn == null)
                 throw new NullReferenceException($"{nameof(_conn)} is null.");

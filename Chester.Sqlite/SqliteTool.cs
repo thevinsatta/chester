@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
-using System.Data.Common;
+using System.Data;
 
 namespace Chester.Sqlite
 {
@@ -12,13 +12,13 @@ namespace Chester.Sqlite
         #endregion
 
         #region Methods
-        protected override DbCommand CreateCommand(DbConnection dbConn) =>
+        protected override IDbCommand CreateCommand(IDbConnection dbConn) =>
             new SqliteCommand() { Connection = (SqliteConnection)dbConn };
 
-        protected override DbCommand CreateCommand(DbConnection dbConn, string cmdText) =>
+        protected override IDbCommand CreateCommand(IDbConnection dbConn, string cmdText) =>
             new SqliteCommand(cmdText, (SqliteConnection)dbConn);
 
-        protected override DbConnection CreateConnection(string connStr) =>
+        protected override IDbConnection CreateConnection(string connStr) =>
             new SqliteConnection(connStr);
         #endregion
     }

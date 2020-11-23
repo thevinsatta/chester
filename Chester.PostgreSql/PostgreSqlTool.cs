@@ -1,5 +1,5 @@
 ﻿using Npgsql;
-using System.Data.Common;
+using System.Data;
 
 namespace Chester.PostgreSql
 {
@@ -12,13 +12,13 @@ namespace Chester.PostgreSql
         #endregion
 
         #region Methods
-        protected override DbCommand CreateCommand(DbConnection dbConn) =>
+        protected override IDbCommand CreateCommand(IDbConnection dbConn) =>
             new NpgsqlCommand() { Connection = (NpgsqlConnection)dbConn };
 
-        protected override DbCommand CreateCommand(DbConnection dbConn, string cmdText) =>
+        protected override IDbCommand CreateCommand(IDbConnection dbConn, string cmdText) =>
             new NpgsqlCommand(cmdText, (NpgsqlConnection)dbConn);
 
-        protected override DbConnection CreateConnection(string connStr) =>
+        protected override IDbConnection CreateConnection(string connStr) =>
             new NpgsqlConnection(connStr);
         #endregion
     }

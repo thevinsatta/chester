@@ -1,5 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
-using System.Data.Common;
+using System.Data;
 
 namespace Chester.MySql
 {
@@ -12,13 +12,13 @@ namespace Chester.MySql
         #endregion
 
         #region Methods
-        protected override DbCommand CreateCommand(DbConnection dbConn) =>
+        protected override IDbCommand CreateCommand(IDbConnection dbConn) =>
             new MySqlCommand() { Connection = (MySqlConnection)dbConn };
 
-        protected override DbCommand CreateCommand(DbConnection dbConn, string cmdText) =>
+        protected override IDbCommand CreateCommand(IDbConnection dbConn, string cmdText) =>
             new MySqlCommand(cmdText, (MySqlConnection)dbConn);
 
-        protected override DbConnection CreateConnection(string connStr) =>
+        protected override IDbConnection CreateConnection(string connStr) =>
             new MySqlConnection(connStr);
         #endregion
     }

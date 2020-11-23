@@ -6,7 +6,6 @@ namespace Chester.Interfaces
 {
     public interface IDbTool : IDisposable
     {
-        void OpenConnection();
         void CloseConnection();
         void SetCommandTimeout(int seconds);
 
