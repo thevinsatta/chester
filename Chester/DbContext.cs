@@ -11,7 +11,7 @@ namespace Chester
     public abstract class DbContext : IDbContext
     {
         #region Fields
-        string _connStr;
+        readonly string _connStr;
         #endregion
 
         #region Properties
