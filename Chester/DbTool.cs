@@ -12,9 +12,9 @@ namespace Chester
         bool _isDisposed;
 
         /// <summary>
-        /// in seconds
+        /// Command execution timeout in seconds
         /// </summary>
-        protected int _cmdTimeout = 120; // default SQL execution timeout
+        protected int _cmdTimeout = 120;
         protected IDbConnection _conn;
         protected IDbCommand _cmd;
         #endregion
