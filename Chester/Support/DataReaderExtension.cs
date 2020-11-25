@@ -60,6 +60,8 @@ namespace Chester.Support
         {
             if (string.IsNullOrWhiteSpace(columnName))
                 throw new ArgumentException($"{nameof(columnName)} cannot be null, empty or whitespace.");
+            if (ordinalCache == null)
+                throw new ArgumentNullException(nameof(ordinalCache));
 
             try
             {
@@ -120,7 +122,7 @@ namespace Chester.Support
             if (string.IsNullOrWhiteSpace(columnName))
                 throw new ArgumentException($"{nameof(columnName)} cannot be null, empty or whitespace.");
             if (ordinalCache == null)
-                throw new ArgumentNullException($"{nameof(ordinalCache)} cannot be null.");
+                throw new ArgumentNullException(nameof(ordinalCache));
 
             try
             {
