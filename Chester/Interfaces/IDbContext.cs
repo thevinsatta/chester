@@ -96,10 +96,6 @@ namespace Chester.Interfaces
         void Exec(Action<IDbTool> action);
         #endregion
 
-        #region OutputValue
-        T OutputValue<T>(IDbDataParameter param);
-        #endregion
-
         #region DbParam
         IDbDataParameter DbParam(string name, object value);
         IDbDataParameter DbParam(string name, object value, ParameterDirection direction);

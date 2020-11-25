@@ -56,6 +56,8 @@ namespace Chester
             CreateDbTool(_connStr);
 
         protected abstract IDbTool CreateDbTool(string connStr);
+
+        protected abstract IDbTool CreateDbTool(IDbConnection dbConn);
         #endregion
 
         #region Fetch w/ while dr.Read() loop
@@ -910,30 +912,6 @@ namespace Chester
             using var db = CreateDbTool();
             action(db);
             db.CloseConnection(); // explicit is always faster
-        }
-        #endregion
-
-        #region Get Parameter Output
-        public T OutputValue<T>(IDbDataParameter param)
-        {
-            if (param.Direction == ParameterDirection.Input)
-                throw new Exception($"Parameter {param.ParameterName} does not have Output, InputOutput or ReturnValue parameter direction specified.");
-
-            var ret = param.Value;
-
-            if (ret == null || ret == DBNull.Value)
-                return default;
-
-            try
-            {
-                return ret is T t
-                    ? t
-                    : (T)Convert.ChangeType(ret, typeof(T));
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"{e.Message} Output value for parameter: {param.ParameterName}.", e);
-            }
         }
         #endregion
 

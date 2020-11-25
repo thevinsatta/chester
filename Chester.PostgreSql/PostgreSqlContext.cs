@@ -47,7 +47,17 @@ namespace Chester.PostgreSql
             var dbTool = new PostgreSqlTool(connStr);
 
             if (CommandTimeout.HasValue)
-                dbTool.SetCommandTimeout(CommandTimeout.Value);
+                dbTool.CommandTimeout = CommandTimeout.Value;
+
+            return dbTool;
+        }
+
+        protected override IDbTool CreateDbTool(IDbConnection dbConn)
+        {
+            var dbTool = new PostgreSqlTool(dbConn);
+
+            if (CommandTimeout.HasValue)
+                dbTool.CommandTimeout = CommandTimeout.Value;
 
             return dbTool;
         }

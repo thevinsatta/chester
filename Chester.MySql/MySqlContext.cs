@@ -45,7 +45,17 @@ namespace Chester.MySql
             var dbTool = new MySqlTool(connStr);
 
             if (CommandTimeout.HasValue)
-                dbTool.SetCommandTimeout(CommandTimeout.Value);
+                dbTool.CommandTimeout = CommandTimeout.Value;
+
+            return dbTool;
+        }
+
+        protected override IDbTool CreateDbTool(IDbConnection dbConn)
+        {
+            var dbTool = new MySqlTool(dbConn);
+
+            if (CommandTimeout.HasValue)
+                dbTool.CommandTimeout = CommandTimeout.Value;
 
             return dbTool;
         }

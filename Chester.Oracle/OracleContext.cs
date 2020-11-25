@@ -46,7 +46,17 @@ namespace Chester.Oracle
             var dbTool = new OracleTool(connStr);
 
             if (CommandTimeout.HasValue)
-                dbTool.SetCommandTimeout(CommandTimeout.Value);
+                dbTool.CommandTimeout = CommandTimeout.Value;
+
+            return dbTool;
+        }
+
+        protected override IDbTool CreateDbTool(IDbConnection dbConn)
+        {
+            var dbTool = new OracleTool(dbConn);
+
+            if (CommandTimeout.HasValue)
+                dbTool.CommandTimeout = CommandTimeout.Value;
 
             return dbTool;
         }

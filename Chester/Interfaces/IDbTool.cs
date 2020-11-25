@@ -6,13 +6,12 @@ namespace Chester.Interfaces
 {
     public interface IDbTool : IDisposable
     {
+        int CommandTimeout { get; set; }
+
         void CloseConnection();
-        void SetCommandTimeout(int timeout);
 
         IDbTransaction BeginTransaction();
         IDbTransaction BeginTransaction(IsolationLevel iso);
-        void CommitTransaction();
-        void RollbackTransaction();
 
         IDataReader DataReader(CommandType cmdType, string cmdText);
         IDataReader DataReader(CommandType cmdType, string cmdText, IEnumerable<IDbDataParameter> @params);

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using System;
 using System.Data;
 
 namespace Chester.SqlServer
@@ -13,38 +12,16 @@ namespace Chester.SqlServer
         #endregion
 
         #region Methods
-        protected override IDbConnection CreateConnection(string connStr)
-        {
-            if (string.IsNullOrWhiteSpace(connStr))
-                throw ArgNullOrWhiteSpaceException(nameof(connStr));
-
-            return new SqlConnection(connStr);
-        }
-
-        protected override IDbCommand CreateCommand(IDbConnection dbConn) =>
-            new SqlCommand()
-            {
-                Connection = (SqlConnection)dbConn ?? throw new ArgumentNullException(nameof(dbConn))
-            };
-
-        protected override IDbCommand CreateCommand(IDbConnection dbConn, string cmdText)
-        {
-            if (dbConn == null)
-                throw new ArgumentNullException(nameof(dbConn));
-
-            if (string.IsNullOrWhiteSpace(cmdText))
-                throw ArgNullOrWhiteSpaceException(nameof(cmdText));
-
-            return new SqlCommand(cmdText, (SqlConnection)dbConn);
-        }
+        protected override IDbConnection CreateConnection() =>
+            new SqlConnection();
 
         /// <summary>
         /// This ensures that ARITHABORT is set to ON.
         /// </summary>
         protected override void AugmentConnection()
         {
-            SetCommand(CommandType.Text, "SET ARITHABORT ON;");
-            _cmd.ExecuteNonQuery();
+            var cmd = SetCommand(CommandType.Text, "SET ARITHABORT ON;");
+            cmd.ExecuteNonQuery();
         }
         #endregion
     }

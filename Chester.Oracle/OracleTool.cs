@@ -1,5 +1,4 @@
 ﻿using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Data;
 
 namespace Chester.Oracle
@@ -13,30 +12,8 @@ namespace Chester.Oracle
         #endregion
 
         #region Methods
-        protected override IDbConnection CreateConnection(string connStr)
-        {
-            if (string.IsNullOrWhiteSpace(connStr))
-                throw ArgNullOrWhiteSpaceException(nameof(connStr));
-
-            return new OracleConnection(connStr);
-        }
-
-        protected override IDbCommand CreateCommand(IDbConnection dbConn) =>
-            new OracleCommand()
-            {
-                Connection = (OracleConnection)dbConn ?? throw new ArgumentNullException(nameof(dbConn))
-            };
-
-        protected override IDbCommand CreateCommand(IDbConnection dbConn, string cmdText)
-        {
-            if (dbConn == null)
-                throw new ArgumentNullException(nameof(dbConn));
-
-            if (string.IsNullOrWhiteSpace(cmdText))
-                throw ArgNullOrWhiteSpaceException(nameof(cmdText));
-
-            return new OracleCommand(cmdText, (OracleConnection)dbConn);
-        }
+        protected override IDbConnection CreateConnection() =>
+            new OracleConnection();
         #endregion
     }
 }
