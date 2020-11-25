@@ -92,6 +92,7 @@ namespace Chester
         #endregion
 
         #region Methods
+        #region // CONNECTION *****************************************************
         protected abstract IDbConnection CreateConnection();
 
         protected IDbConnection CreateConnection(string connStr)
@@ -107,7 +108,6 @@ namespace Chester
 
         protected virtual void AugmentConnection() { }
 
-        #region // CONNECTION *****************************************************
         public void CloseConnection()
         {
             if (_conn == null || _conn.State == ConnectionState.Closed)
