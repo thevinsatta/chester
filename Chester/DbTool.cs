@@ -1,4 +1,5 @@
-﻿using Chester.Interfaces;
+﻿using Chester.Infrastructure;
+using Chester.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,7 +17,6 @@ namespace Chester
         /// </summary>
         protected int _cmdTimeout = 120;
         protected IDbConnection _conn;
-        protected IDbCommand _cmd;
         #endregion
 
         #region Properties
@@ -50,16 +50,6 @@ namespace Chester
                 return _conn;
             }
         }
-
-        IDbCommand GetCommand
-        {
-            get
-            {
-                _cmd ??= GetConnection.CreateCommand();
-
-                return _cmd;
-            }
-        }
         #endregion
 
         #region Constructors
@@ -84,13 +74,6 @@ namespace Chester
 
             if (disposing)
             {
-                // dispose the managed resources
-                if (_cmd != null)
-                {
-                    _cmd.Dispose();
-                    _cmd = null;
-                }
-
                 if (_conn != null)
                 {
                     CloseConnection();
@@ -138,14 +121,14 @@ namespace Chester
         #endregion
 
         #region // COMMAND ********************************************************
-        protected IDbCommand SetCommand(
+        public IDbCommand CreateCommand(
             CommandType cmdType,
             string cmdText)
         {
             if (string.IsNullOrWhiteSpace(cmdText))
                 throw ArgNullOrWhiteSpaceException(nameof(cmdText));
 
-            var cmd = GetCommand;
+            var cmd = GetConnection.CreateCommand();
 
             cmd.CommandText = cmdText;
             cmd.CommandTimeout = _cmdTimeout;
@@ -155,12 +138,12 @@ namespace Chester
             return cmd;
         }
 
-        protected IDbCommand SetCommand(
+        public IDbCommand CreateCommand(
             CommandType cmdType,
             string cmdText,
             IEnumerable<IDbDataParameter> @params)
         {
-            var cmd = SetCommand(cmdType, cmdText);
+            var cmd = CreateCommand(cmdType, cmdText);
 
             if (!(@params?.Any() ?? false))
                 return cmd;
@@ -176,50 +159,30 @@ namespace Chester
         }
         #endregion
 
-        #region // TRANSACTION ****************************************************
-        public IDbTransaction BeginTransaction()
-        {
-            var cmd = GetCommand;
-
-            cmd.Transaction = _conn.BeginTransaction();
-
-            return cmd.Transaction;
-        }
-
-        public IDbTransaction BeginTransaction(IsolationLevel iso)
-        {
-            var cmd = GetCommand;
-
-            cmd.Transaction = _conn.BeginTransaction(iso);
-
-            return cmd.Transaction;
-        }
-        #endregion
-
         #region // DATAREADER *****************************************************
-        public IDataReader DataReader(
+        public DataReaderCommand DataReader(
             CommandType cmdType,
             string cmdText) =>
-            DataReader(CommandBehavior.CloseConnection, cmdType, cmdText);
+            DataReader(CommandBehavior.CloseConnection, cmdType, cmdText, null);
 
-        public IDataReader DataReader(
+        public DataReaderCommand DataReader(
             CommandType cmdType,
             string cmdText,
             IEnumerable<IDbDataParameter> @params) =>
             DataReader(CommandBehavior.CloseConnection, cmdType, cmdText, @params);
 
-        public IDataReader DataReader(
+        public DataReaderCommand DataReader(
             CommandBehavior cmdBehavior,
             CommandType cmdType,
             string cmdText) =>
             DataReader(cmdBehavior, cmdType, cmdText, null);
 
-        public IDataReader DataReader(
+        public DataReaderCommand DataReader(
             CommandBehavior cmdBehavior,
             CommandType cmdType,
             string cmdText,
             IEnumerable<IDbDataParameter> @params) =>
-            SetCommand(cmdType, cmdText, @params).ExecuteReader(cmdBehavior);
+            new DataReaderCommand(CreateCommand(cmdType, cmdText, @params), cmdBehavior);
         #endregion
 
         #region // EXEC NONQUERY **************************************************
@@ -231,21 +194,33 @@ namespace Chester
         public int ExecNonQuery(
             CommandType cmdType,
             string cmdText,
-            IEnumerable<IDbDataParameter> @params) =>
-            SetCommand(cmdType, cmdText, @params).ExecuteNonQuery();
+            IEnumerable<IDbDataParameter> @params)
+        {
+            using var cmd = CreateCommand(cmdType, cmdText, @params);
+            return cmd.ExecuteNonQuery();
+        }
         #endregion
 
         #region // EXEC SCALAR ****************************************************
-        public object ExecScalar(
+        public T ExecScalar<T>(
             CommandType cmdType,
             string cmdText) =>
-            ExecScalar(cmdType, cmdText, null);
+            ExecScalar<T>(cmdType, cmdText, null);
 
-        public object ExecScalar(
+        public T ExecScalar<T>(
             CommandType cmdType,
             string cmdText,
-            IEnumerable<IDbDataParameter> @params) =>
-            SetCommand(cmdType, cmdText, @params).ExecuteScalar();
+            IEnumerable<IDbDataParameter> @params)
+        {
+            using var cmd = CreateCommand(cmdType, cmdText, @params);
+            var ret = cmd.ExecuteScalar();
+
+            return ret == null || ret == DBNull.Value
+                ? default
+                : ret is T t
+                    ? t
+                    : (T)Convert.ChangeType(ret, typeof(T));
+        }
         #endregion
         #endregion
 

@@ -20,7 +20,7 @@ namespace Chester.SqlServer
         /// </summary>
         protected override void AugmentConnection()
         {
-            var cmd = SetCommand(CommandType.Text, "SET ARITHABORT ON;");
+            using var cmd = CreateCommand(CommandType.Text, "SET ARITHABORT ON;");
             cmd.ExecuteNonQuery();
         }
         #endregion

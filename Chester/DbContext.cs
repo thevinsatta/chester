@@ -428,12 +428,12 @@ namespace Chester
             IEnumerable<IDbDataParameter> @params)
         {
             using var db = CreateDbTool();
-            using var dr = db.DataReader(cmdBehavior, cmdType, cmdText, @params);
+            using var drc = db.DataReader(cmdBehavior, cmdType, cmdText, @params);
 
-            while (dr.Read())
-                yield return func(dr);
+            while (drc.DataReader.Read())
+                yield return func(drc.DataReader);
 
-            dr.Close(); // explicit is always faster
+            drc.Close(); // explicit is always faster
             db.CloseConnection(); // explicit is always faster
         }
 
@@ -521,14 +521,14 @@ namespace Chester
             IEnumerable<IDbDataParameter> @params)
         {
             using var db = CreateDbTool();
-            using var dr = db.DataReader(cmdBehavior, cmdType, cmdText, @params);
+            using var drc = db.DataReader(cmdBehavior, cmdType, cmdText, @params);
 
             var oc = CreateOrdinalCache();
 
-            while (dr.Read())
-                yield return func(dr, oc);
+            while (drc.DataReader.Read())
+                yield return func(drc.DataReader, oc);
 
-            dr.Close(); // explicit is always faster
+            drc.Close(); // explicit is always faster
             db.CloseConnection(); // explicit is always faster
         }
         #endregion
@@ -776,9 +776,9 @@ namespace Chester
             IEnumerable<IDbDataParameter> @params) =>
             Exec(
                 (IDbTool db) => {
-                    using var dr = db.DataReader(cmdBehavior, cmdType, cmdText, @params);
-                    action(dr);
-                    dr.Close(); // explicit is always faster
+                    using var drc = db.DataReader(cmdBehavior, cmdType, cmdText, @params);
+                    action(drc.DataReader);
+                    drc.Close(); // explicit is always faster
                 });
         #endregion
 
@@ -798,7 +798,7 @@ namespace Chester
         /// <param name="params">Parameters to send to the given stored procedure.</param>
         /// <returns>Number of affected rows.</returns>
         public virtual int ExecNonQuery(string cmdText, IEnumerable<IDbDataParameter> @params) =>
-            ExecNonQuery(DefaultCommandType, cmdText.Trim(), @params);
+            ExecNonQuery(DefaultCommandType, cmdText, @params);
 
         /// <summary>
         /// Executes non-query
@@ -822,7 +822,7 @@ namespace Chester
 
             Exec(
                 (IDbTool db) => {
-                    rows = db.ExecNonQuery(cmdType, cmdText.Trim(), @params);
+                    rows = db.ExecNonQuery(cmdType, cmdText?.Trim(), @params);
                 });
 
             return rows;
@@ -869,36 +869,11 @@ namespace Chester
         /// <returns></returns>
         public T ExecScalar<T>(CommandType cmdType, string cmdText, IEnumerable<IDbDataParameter> @params)
         {
-            object ret = null;
+            using var db = CreateDbTool();
+            T t = db.ExecScalar<T>(cmdType, cmdText, @params);
+            db.CloseConnection(); // explicit is always faster
 
-            Exec(
-                (IDbTool db) => {
-                    ret = db.ExecScalar(cmdType, cmdText, @params);
-                });
-
-            if (ret == null || ret == DBNull.Value)
-                return default;
-
-            try
-            {
-                return ret is T t
-                    ? t
-                    : (T)Convert.ChangeType(ret, typeof(T));
-            }
-            catch (Exception e)
-            {
-                switch (cmdType)
-                {
-                    case CommandType.StoredProcedure:
-                        throw new Exception($"{e.Message} Scalar value \"{ret}\" for stored procedure: {cmdText}.", e);
-                    case CommandType.TableDirect:
-                        throw new Exception($"{e.Message} Scalar value \"{ret}\" for table: {cmdText}.", e);
-                    case CommandType.Text:
-                        throw new Exception($"{e.Message} Scalar value \"{ret}\" for command text:\r\n{cmdText}.", e);
-                    default:
-                        throw; // re-throw original error
-                }
-            }
+            return t;
         }
         #endregion
 

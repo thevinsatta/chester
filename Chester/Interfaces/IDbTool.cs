@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chester.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -10,18 +11,18 @@ namespace Chester.Interfaces
 
         void CloseConnection();
 
-        IDbTransaction BeginTransaction();
-        IDbTransaction BeginTransaction(IsolationLevel iso);
+        IDbCommand CreateCommand(CommandType cmdType, string cmdText);
+        IDbCommand CreateCommand(CommandType cmdType, string cmdText, IEnumerable<IDbDataParameter> @params);
 
-        IDataReader DataReader(CommandType cmdType, string cmdText);
-        IDataReader DataReader(CommandType cmdType, string cmdText, IEnumerable<IDbDataParameter> @params);
-        IDataReader DataReader(CommandBehavior cmdBehavior, CommandType cmdType, string cmdText);
-        IDataReader DataReader(CommandBehavior cmdBehavior, CommandType cmdType, string cmdText, IEnumerable<IDbDataParameter> @params);
+        DataReaderCommand DataReader(CommandType cmdType, string cmdText);
+        DataReaderCommand DataReader(CommandType cmdType, string cmdText, IEnumerable<IDbDataParameter> @params);
+        DataReaderCommand DataReader(CommandBehavior cmdBehavior, CommandType cmdType, string cmdText);
+        DataReaderCommand DataReader(CommandBehavior cmdBehavior, CommandType cmdType, string cmdText, IEnumerable<IDbDataParameter> @params);
 
         int ExecNonQuery(CommandType cmdType, string cmdText);
         int ExecNonQuery(CommandType cmdType, string cmdText, IEnumerable<IDbDataParameter> @params);
 
-        object ExecScalar(CommandType cmdType, string cmdText);
-        object ExecScalar(CommandType cmdType, string cmdText, IEnumerable<IDbDataParameter> @params);
+        T ExecScalar<T>(CommandType cmdType, string cmdText);
+        T ExecScalar<T>(CommandType cmdType, string cmdText, IEnumerable<IDbDataParameter> @params);
     }
 }
