@@ -127,8 +127,8 @@ namespace Chester
 
             var cmd = GetConnection.CreateCommand();
 
-            cmd.CommandText = cmdText;
             cmd.CommandTimeout = _cmdTimeout;
+            cmd.CommandText = cmdText;
             cmd.CommandType = cmdType;
             cmd.Parameters.Clear();
 
@@ -148,7 +148,6 @@ namespace Chester
             foreach (var param in @params)
             {
                 param.Value ??= DBNull.Value;
-
                 cmd.Parameters.Add(param);
             }
 
@@ -222,7 +221,7 @@ namespace Chester
         #endregion
 
         #region Helpers
-        public ArgumentException ArgNullOrWhiteSpaceException(string argName) =>
+        protected ArgumentException ArgNullOrWhiteSpaceException(string argName) =>
             new ArgumentException($"{argName} cannot be null, empty, or consists only of white-space characters.");
         #endregion
     }
