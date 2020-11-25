@@ -9,7 +9,7 @@ namespace Chester.PostgreSql
         #region Constructors
         public PostgreSqlTool(string connStr) : base(connStr) { }
 
-        public PostgreSqlTool(NpgsqlConnection dbConn) : base(dbConn) { }
+        public PostgreSqlTool(IDbConnection dbConn) : base(dbConn) { }
         #endregion
 
         #region Methods

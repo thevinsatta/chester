@@ -9,7 +9,7 @@ namespace Chester.Sqlite
         #region Constructors
         public SqliteTool(string connStr) : base(connStr) { }
 
-        public SqliteTool(SqliteConnection dbConn) : base(dbConn) { }
+        public SqliteTool(IDbConnection dbConn) : base(dbConn) { }
         #endregion
 
         #region Methods

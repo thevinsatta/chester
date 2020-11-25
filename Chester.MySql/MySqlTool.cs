@@ -9,7 +9,7 @@ namespace Chester.MySql
         #region Constructors
         public MySqlTool(string connStr) : base(connStr) { }
 
-        public MySqlTool(MySqlConnection dbConn) : base(dbConn) { }
+        public MySqlTool(IDbConnection dbConn) : base(dbConn) { }
         #endregion
 
         #region Methods

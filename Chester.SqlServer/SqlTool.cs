@@ -9,7 +9,7 @@ namespace Chester.SqlServer
         #region Constructors
         public SqlTool(string connStr) : base(connStr) { }
 
-        public SqlTool(SqlConnection dbConn) : base(dbConn) { }
+        public SqlTool(IDbConnection dbConn) : base(dbConn) { }
         #endregion
 
         #region Methods

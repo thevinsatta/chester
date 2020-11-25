@@ -9,7 +9,7 @@ namespace Chester.Oracle
         #region Constructors
         public OracleTool(string connStr) : base(connStr) { }
 
-        public OracleTool(OracleConnection dbConn) : base(dbConn) { }
+        public OracleTool(IDbConnection dbConn) : base(dbConn) { }
         #endregion
 
         #region Methods
