@@ -914,59 +914,11 @@ namespace Chester
             db.CloseConnection(); // explicit is always faster
         }
         #endregion
-
-        #region Create Parameter
-        public abstract IDbDataParameter DbParam(string name, object value);
-
-        public IDbDataParameter DbParam(string name, object value, ParameterDirection direction)
-        {
-            var p = DbParam(name, value);
-            p.Direction = direction;
-
-            return p;
-        }
-
-        public abstract IDbDataParameter DbParam(string name, DbType type);
-
-        public abstract IDbDataParameter DbParam(string name, DbType type, int size);
-
-        public IDbDataParameter DbParam(string name, DbType type, object value)
-        {
-            var p = DbParam(name, type);
-            p.Value = value;
-
-            return p;
-        }
-
-        public IDbDataParameter DbParam(string name, DbType type, ParameterDirection direction)
-        {
-            var p = DbParam(name, type);
-            p.Direction = direction;
-
-            return p;
-        }
-
-        public IDbDataParameter DbParam(string name, DbType type, object value, ParameterDirection direction)
-        {
-            var p = DbParam(name, type, direction);
-            p.Value = value;
-
-            return p;
-        }
-
-        public abstract IDbDataParameter DbParam(string name, DbType type, int size, object value, ParameterDirection direction);
-        #endregion
         #endregion
 
         #region Misc
         public IDictionary<string, int> CreateOrdinalCache() =>
             new Dictionary<string, int>();
-
-        public ArgumentException ArgNullOrWhiteSpaceException(string argName) =>
-            new ArgumentException($"{argName} cannot be null, empty, or consists only of white-space characters.");
-
-        public ArgumentException DbTypeNotSupportedException(DbType type, string dbName) =>
-            new ArgumentException($"{Enum.GetName(typeof(DbType), type)} is not a supported or ambiguous DbType for {dbName}.");
         #endregion
     }
 }

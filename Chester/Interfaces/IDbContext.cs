@@ -96,17 +96,6 @@ namespace Chester.Interfaces
         void Exec(Action<IDbTool> action);
         #endregion
 
-        #region DbParam
-        IDbDataParameter DbParam(string name, object value);
-        IDbDataParameter DbParam(string name, object value, ParameterDirection direction);
-        IDbDataParameter DbParam(string name, DbType type);
-        IDbDataParameter DbParam(string name, DbType type, int size);
-        IDbDataParameter DbParam(string name, DbType type, object value);
-        IDbDataParameter DbParam(string name, DbType type, ParameterDirection direction);
-        IDbDataParameter DbParam(string name, DbType type, object value, ParameterDirection direction);
-        IDbDataParameter DbParam(string name, DbType type, int size, object value, ParameterDirection direction);
-        #endregion
-
         #region Misc
         IDictionary<string, int> CreateOrdinalCache();
         #endregion
