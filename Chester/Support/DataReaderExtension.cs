@@ -145,15 +145,6 @@ namespace Chester.Support
 
         #region Misc
         /// <summary>
-        /// Checks if datareader has the argument column name.
-        /// </summary>
-        /// <param name="dr"></param>
-        /// <param name="columnName"></param>
-        /// <returns></returns>
-        public static bool HasColumn(this IDataReader dr, string columnName) =>
-            TryGetColumnIndex(dr, columnName, out int index);
-
-        /// <summary>
         /// Tries to get the column index of the matching column name. Defaults to -1 if not found.
         /// </summary>
         /// <param name="dr"></param>
