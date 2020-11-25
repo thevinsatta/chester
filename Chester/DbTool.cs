@@ -23,12 +23,9 @@ namespace Chester
         public int CommandTimeout
         {
             get => _cmdTimeout;
-            set
-            {
-                _cmdTimeout = value >= 0
-                    ? value
-                    : throw new Exception($"Cannot be less than 0.");
-            }
+            set => _cmdTimeout = value >= 0
+                ? value
+                : throw new Exception($"Cannot be less than 0.");
         }
 
         IDbConnection GetConnection
