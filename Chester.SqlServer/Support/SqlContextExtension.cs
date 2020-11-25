@@ -15,12 +15,17 @@ namespace Chester.SqlServer.Support
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="paramName"></param>
-        /// <param name="typeName"></param>
+        /// <param name="udtTypeName"></param>
         /// <param name="values"></param>
         /// <param name="createMeta"></param>
         /// <param name="populateRow"></param>
         /// <returns></returns>
-        public static IDbDataParameter DbParamStructured<T>(string paramName, string typeName, IEnumerable<T> values, Func<SqlMetaData[]> createMeta, Action<SqlDataRecord, T> populateRow)
+        public static IDbDataParameter DbParamStructured<T>(
+            string paramName,
+            string udtTypeName,
+            IEnumerable<T> values,
+            Func<SqlMetaData[]> createMeta,
+            Action<SqlDataRecord, T> populateRow)
         {
             var items = new List<SqlDataRecord>();
 
@@ -39,22 +44,25 @@ namespace Chester.SqlServer.Support
             return new SqlParameter(paramName, items)
             {
                 SqlDbType = SqlDbType.Structured,
-                TypeName = typeName
+                UdtTypeName = udtTypeName
             };
         }
 
         /// <summary>
         /// Creates a structure paramter that utilizes a populated data table.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="type"></param>
+        /// <param name="paramName"></param>
+        /// <param name="udtTypeName"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static IDbDataParameter DbParamStructured(string name, string type, DataTable value) =>
-            new SqlParameter(name, value)
+        public static IDbDataParameter DbParamStructured(
+            string paramName,
+            string udtTypeName,
+            DataTable value) =>
+            new SqlParameter(paramName, value)
             {
                 SqlDbType = SqlDbType.Structured,
-                TypeName = type
+                UdtTypeName = udtTypeName
             };
     }
 }
